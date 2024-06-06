@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime as dt
 
-st.set_page_config(page_title="Bulldog Bites", page_icon="", layout="wide")
+st.set_page_config(page_title="Bulldog Bites", page_icon="logo.png", layout="wide")
 
 page = st.sidebar.radio("**Navigate:**", ["Home", "Food Information", "Order Online", "QuickBites Subscription™"])
 
