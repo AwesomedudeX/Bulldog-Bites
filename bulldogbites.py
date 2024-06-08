@@ -74,7 +74,121 @@ else:
         pass
 
     if page == "Order Online":
-        pass
+        
+        st.sidebar.write("Required fields are indicated by a **:red[*]** symbol.")
+        st.sidebar.write("---")
+
+        st.subheader("Name & Date of Birth")
+
+        c1, c2, c3 = st.columns(3)
+
+        firstname = c1.text_input("**First Name:red[ *]**")
+        middlename = " "+c2.text_input("**Middle Name (Optional):**")
+        lastname = c3.text_input("**Last Name:red[ *]**")
+
+        if firstname != "" and lastname != "":
+            fullname = f"{firstname}{middlename} {lastname}"
+            fullnameft = f"{lastname}, {firstname}{middlename}"
+        else:
+            fullname = ""
+            fullnameft = "N/A"
+
+
+        c1, c2, c3 = st.columns(3)
+        
+        st.write("---")
+
+        dob = {
+            "Month": "January",
+            "Year": 2024,
+            "Day": 1
+        }
+
+        dob["Year"] = c3.selectbox("**Year:**", ["N/A"]+[i for i in range(2000, 2025)])
+        dob["Month"] = c1.selectbox("**Month:**", ["N/A", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
+        
+        if dob["Month"] == "February":
+            
+            if dob.Year % 4 == 0:
+                days = [i for i in range(1, 30)]
+            else:
+                days = [i for i in range(1, 29)]
+
+        elif dob["Month"] in ["January", "March", "May", "July", "August", "October", "December"]:
+            days = [i for i in range(1, 32)]
+        
+        else:
+            days = [i for i in range(1, 31)]
+        
+
+        dob["Day"] = c2.selectbox("**Day:**", ["N/A"]+days)
+
+        st.subheader("Contact & Student Informaiton")
+
+        c1, c2 = st.columns(2)
+
+        email = c1.text_input("**Email (name@company.extension) - For Contacting Purposes**:")
+        phonenumber = "".join("".join("".join("".join("".join("".join("".join(c2.text_input("**Phone Number (###-###-####) - For Contacting Purposes**:").split("-")).split("(")).split(")")).split("|")).split("/")).split(" ")).split("."))
+
+        try:
+            invnum = False
+            phonenumber = int(phonenumber)
+            phonenumber = str(phonenumber)
+        except:
+            if phonenumber != "":
+                st.sidebar.write("**:red[Please enter a valid phone number.]**")
+                invnum = True
+
+        st.write("**:green[Enter at least one of these pieces of information below:]**")
+
+        c1, c2 = st.columns(2)
+
+        pronouns = c1.radio("**Pronouns: :red[*]**", ["Prefer Not to Say", "He/Him (Male)", "She/Her (Female)", "They/Them (Non-Binary)", "Other (Please Specify Below)"])
+        grade = c2.radio("**Grade** :red[*]", [10, 11, 12, "Not a Student at SWC"])
+
+        if "Other" in pronouns:
+            otherpronouns = c1.text_input("**Other Pronouns:**")
+            
+
+        if email == "":
+            email = "N/A"
+        
+        if phonenumber != "" and not invnum:
+            phonenumber = f"*({phonenumber[:3]}) {phonenumber[3:6]}-{phonenumber[6:10]}*"
+        else:
+            phonenumber = "N/A"
+
+        if dob["Day"] != "N/A" and dob["Month"] != "N/A" and dob["Year"] != "N/A":
+            dobstr = f"{dob['Month']} {dob['Day']}, {dob['Year']}"
+        else:
+            dobstr = "N/A"
+
+        info = {
+            "First Name": firstname,
+            "Middle Name": middlename,
+            "Last Name": lastname,
+            "Pronouns": pronouns,
+            "Email": email,
+            "Phone Number": phonenumber
+        }
+
+        infostr = f"""
+        **Name**: {fullnameft}
+        
+        **Pronouns**: {pronouns}
+
+        **Grade**: {grade}
+
+        **Date of Birth**: {dobstr}
+
+        **Email**: *{email}*
+        
+        **Phone Number**: *{phonenumber}*
+        
+        ---
+        """
+
+        st.sidebar.write(infostr)
 
     if page == "QuickBites Subscription™":
         pass
