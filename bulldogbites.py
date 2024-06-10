@@ -1,5 +1,10 @@
 import streamlit as st
+import numpy as np
+import pandas as pd
+
+from numpy import random
 from datetime import datetime as dt
+
 
 st.set_page_config(page_title="Bulldog Bites", page_icon="logo.png", layout="wide")
 
@@ -77,16 +82,19 @@ else:
 
     if page == "Order Online":
         
-        st.sidebar.write("Required fields are indicated by a **:red[*]** symbol.")
-        st.sidebar.write("---")
+        st.sidebar.write("""
+        Required fields are indicated by a **:red[*]** symbol.
+        
+        ---
+        """)
 
         st.subheader("Name & Date of Birth")
 
         c1, c2, c3 = st.columns(3)
 
-        firstname = c1.text_input("**First Name:red[ *]**")
+        firstname = c1.text_input("**First Name: :red[ *]**")
         middlename = " "+c2.text_input("**Middle Name (Optional):**")
-        lastname = c3.text_input("**Last Name:red[ *]**")
+        lastname = c3.text_input("**Last Name: :red[ *]**")
 
         if firstname != "" and lastname != "":
             fullname = f"{firstname}{middlename} {lastname}"
@@ -131,21 +139,84 @@ else:
         c1, c2 = st.columns(2)
 
         email = c1.text_input("**Email (name@company.extension)**:")
-        phonenumber = "".join("".join("".join("".join("".join("".join("".join(c2.text_input("**Phone Number (###-###-####)**:").split("-")).split("(")).split(")")).split("|")).split("/")).split(" ")).split("."))
+        phonenumber = "".join("".join("".join("".join("".join("".join("".join(c2.text_input("**Phone Number (###-###-####; No Country Code)**:").split("-")).split("(")).split(")")).split("|")).split("/")).split(" ")).split("."))
 
-        try:
-            invnum = False
-            phonenumber = int(phonenumber)
-            phonenumber = str(phonenumber)
-        except:
-            if phonenumber != "":
-                st.sidebar.write("**:red[Please enter a valid phone number.]**")
-                invnum = True
+        if email != "":
+
+            if "@" not in email or "." not in email:
+                c1.write("**:red[Invalid Email.]**")
+
+            else:
+                email = "*"+email+"*"                
+
+        if phonenumber != "":
+
+            try:
+                
+                invnum = False
+                phonenumber = int(phonenumber)
+                
+                if len(phonenumber) > 14:
+                    c2.write("**:red[Invalid Phone Number.]**")
+
+                else:
+                    phonenumber = "*"+str(phonenumber)+"*"                
+
+            except:
+
+                if phonenumber != "":
+                    c2.write("**:red[Invalid Phone Number.]**")
+                    invnum = True
 
         c1, c2 = st.columns(2)
 
         pronouns = c1.radio("**Pronouns: :red[*]**", ["Prefer Not to Say", "He/Him (Male)", "She/Her (Female)", "They/Them (Non-Binary)", "Other (Please Specify Below)"])
         grade = c2.radio("**Grade** :red[*]", [10, 11, 12, "Not a Student at SWC"])
+
+        st.write("---")
+        st.subheader("Payment Information")
+
+        c1, c2 = st.columns(2)
+
+        cardnumber = c1.text_input("**Card Number: :red[*]**")
+
+        if cardnumber != "":
+
+            try:
+                
+                if len(cardnumber) >= 12 and len(cardnumber) <= 16:
+                    cardnumber = int(cardnumber)
+                else:
+                    c1.write(":red[**Invalid Card Number.**]")
+
+            except:
+                c1.write(":red[**Invalid Card Number.**]")
+        
+        else:
+            cardnumber = "N/A"
+
+        pin = c2.text_input("**PIN: :red[*]**")
+
+        if pin != "":
+
+            try:
+                
+                if len(pin) >= 3 and len(pin) <= 4:
+                    pin = int(pin)
+
+                else:
+                    c2.write(":red[**Invalid PIN.**]")
+
+            except:
+                c2.write(":red[**Invalid PIN.**]")
+
+        else:
+            pin = "N/A"
+
+        if pin == "N/A":
+            pindisp = pin
+        else:
+            pindisp = f"**{pin}**"
 
         if "Other" in pronouns:
             otherpronouns = c1.text_input("**Other Pronouns:**")
@@ -170,7 +241,9 @@ else:
             "Last Name": lastname,
             "Pronouns": pronouns,
             "Email": email,
-            "Phone Number": phonenumber
+            "Phone Number": phonenumber,
+            "Card Number": cardnumber,
+            "PIN": pin
         }
 
         infostr = f"""
@@ -182,18 +255,30 @@ else:
 
         **Date of Birth**: {dobstr}
 
-        **Email**: *{email}*
+        **Email**: {email}
         
-        **Phone Number**: *{phonenumber}*
+        **Phone Number**: {phonenumber}
         
+        **Card Number**: {cardnumber}
+
+        **PIN**: {pindisp}
+
         ---"""
 
-        st.sidebar.header(":blue[Current Information:]")
-        st.sidebar.write(infostr)
-        st.sidebar.write("""
+        currentinfo = st.sidebar.expander(":blue[**Current Information**]")
+
+        currentinfo.title(":blue[Current Information:]")
+        currentinfo.write(infostr)
+
+        datausage = st.sidebar.expander(":white[**Data Usage**]")
+
+        datausage.title("Data Usage")
+        datausage.write("""
         We use your ordering data (excluding financial information) anonymously to improve the experience of all customers with our service. For this reason, we would like
         if you give us as much data as possible (out of what is shown) to help us modify our business to suit the needs of its customers. If you would like your data to be
         excluded, select the checkbox below.
+                        
+        ---
         """)
         
         excludedata = st.sidebar.checkbox("Exclude my information from company statistics data")
