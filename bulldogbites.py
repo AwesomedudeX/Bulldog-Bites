@@ -77,7 +77,7 @@ else:
     st.write("---")
 
     if page == "Food Information":
-        pass
+        st.subheader(":green[*Coming Soon*]")
 
 
     if page == "Order Online":
@@ -285,4 +285,4 @@ else:
 
 
     if page == "QuickBites Subscription™":
-        pass
+        st.subheader(":green[*Coming Soon*]")
