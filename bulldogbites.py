@@ -36,7 +36,7 @@ if page == "Home":
     """
 
     contact = """
-    *Email:* *Bulldog.bites.cafe@gmail.com*
+    *Email:* *bulldog.bites.cafe@gmail.com*
     
     We respond in less than 24 hours (after business startup)
     """
@@ -62,6 +62,7 @@ if page == "Home":
     st.header(":red[Contact] :blue[Us]")
     st.write(contact)
 
+
 else:
 
     titleft = page.split(" ")
@@ -72,6 +73,7 @@ else:
 
     if page == "Food Information":
         pass
+
 
     if page == "Order Online":
         
@@ -124,11 +126,12 @@ else:
         dob["Day"] = c2.selectbox("**Day:**", ["N/A"]+days)
 
         st.subheader("Contact & Student Informaiton")
+        st.write("**:green[Enter at least one of these pieces of information below for contacting purposes:]**")
 
         c1, c2 = st.columns(2)
 
-        email = c1.text_input("**Email (name@company.extension) - For Contacting Purposes**:")
-        phonenumber = "".join("".join("".join("".join("".join("".join("".join(c2.text_input("**Phone Number (###-###-####) - For Contacting Purposes**:").split("-")).split("(")).split(")")).split("|")).split("/")).split(" ")).split("."))
+        email = c1.text_input("**Email (name@company.extension)**:")
+        phonenumber = "".join("".join("".join("".join("".join("".join("".join(c2.text_input("**Phone Number (###-###-####)**:").split("-")).split("(")).split(")")).split("|")).split("/")).split(" ")).split("."))
 
         try:
             invnum = False
@@ -138,8 +141,6 @@ else:
             if phonenumber != "":
                 st.sidebar.write("**:red[Please enter a valid phone number.]**")
                 invnum = True
-
-        st.write("**:green[Enter at least one of these pieces of information below:]**")
 
         c1, c2 = st.columns(2)
 
@@ -185,10 +186,18 @@ else:
         
         **Phone Number**: *{phonenumber}*
         
-        ---
-        """
+        ---"""
 
+        st.sidebar.header(":blue[Current Information:]")
         st.sidebar.write(infostr)
+        st.sidebar.write("""
+        We use your ordering data (excluding financial information) anonymously to improve the experience of all customers with our service. For this reason, we would like
+        if you give us as much data as possible (out of what is shown) to help us modify our business to suit the needs of its customers. If you would like your data to be
+        excluded, select the checkbox below.
+        """)
+        
+        excludedata = st.sidebar.checkbox("Exclude my information from company statistics data")
+
 
     if page == "QuickBites Subscription™":
         pass
